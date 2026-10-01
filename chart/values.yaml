@@ -16,6 +16,22 @@ config: |
   # can change the host's clock.
   minimum-agreeing-sources = 1
 
+  # Serve time to NTP clients.
+  # [[server]]
+  # listen = "0.0.0.0:123"
+
+# LoadBalancer Service exposing ntpd-rs as an NTP server (UDP).
+# Requires a [[server]] section in config listening on port 123.
+server:
+  enabled: false
+  type: LoadBalancer
+  port: 123
+  # Set to "Local" to preserve client source IPs (traffic only goes to
+  # pods on the receiving node).
+  externalTrafficPolicy: Local
+  loadBalancerIP: ""
+  annotations: {}
+
 image:
   repository: ghcr.io/whitestack/ntpd-rs
   pullPolicy: IfNotPresent
