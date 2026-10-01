@@ -2,7 +2,7 @@ apiVersion: v2
 name: ntpd-rs
 description: Helm chart for ntpd-rs
 type: application
-version: 1.1.2
+version: 1.1.3
 appVersion: "v1.1.2"
 icon: "https://avatars.githubusercontent.com/u/124210749?s=48&v=4"
 sources:
