@@ -1,0 +1,24 @@
+{{- if .Values.server.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ntpd-rs.fullname" . }}-ntp
+  labels: {{- include "ntpd-rs.labels" . | nindent 4 }}
+  {{- with .Values.server.annotations }}
+  annotations: {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.server.type }}
+  {{- with .Values.server.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .Values.server.loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.server.port }}
+      targetPort: 123
+      protocol: UDP
+      name: ntp
+  selector: {{- include "ntpd-rs.selectorLabels" . | nindent 4 }}
+{{- end }}
