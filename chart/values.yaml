@@ -32,6 +32,14 @@ server:
   loadBalancerIP: ""
   annotations: {}
 
+# Run the pods in the host network namespace so ntpd-rs is reachable directly
+# on each node's IP (UDP 123) instead of through a load-balanced Service. Use
+# it when NTP clients need several independent servers for their selection
+# algorithm. Requires a [[server]] section in config listening on 0.0.0.0:123.
+# Binds 123/UDP and 9975/TCP (metrics) on every node. Usually combined with
+# server.enabled=false.
+hostNetwork: false
+
 image:
   repository: ghcr.io/whitestack/ntpd-rs
   pullPolicy: IfNotPresent

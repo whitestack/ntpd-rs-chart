@@ -44,3 +44,17 @@ Configure it with `.Values.server`:
 
 The `[[server]]` section in `.Values.config` must listen on port 123. Your
 load balancer implementation must support UDP.
+
+#### Host network mode
+
+To reach each node's `ntpd-rs` directly on its node IP (so clients can use
+several independent servers instead of one load-balanced VIP), set
+`hostNetwork=true` and uncomment the `[[server]]` section in `.Values.config`,
+listening on `0.0.0.0:123`. Usually combined with `server.enabled=false`.
+
+Ports `123/UDP` and `9975/TCP` (metrics) are bound on every node, so make sure
+they are free and firewall the metrics port accordingly.
+
+| Value | Default | Description |
+|-------|---------|-------------|
+| `hostNetwork` | `false` | Run the DaemonSet in the host network namespace |

@@ -10,6 +10,10 @@ spec:
     metadata:
       labels: {{- include "ntpd-rs.labels" . | nindent 8 }}
     spec:
+      {{- if .Values.hostNetwork }}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      {{- end }}
       tolerations: {{- toYaml .Values.tolerations | nindent 6 }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets: {{- toYaml . | nindent 6 }}
@@ -20,11 +24,20 @@ spec:
         args:
         - -c
         - /etc/ntpd-rs/ntp.toml
+        {{- if .Values.hostNetwork }}
+        ports:
+        - name: ntp
+          containerPort: 123
+          protocol: UDP
+        {{- end }}
         resources: {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
           capabilities:
             add:
             - SYS_TIME
+            {{- if .Values.hostNetwork }}
+            - NET_BIND_SERVICE
+            {{- end }}
         volumeMounts:
         - name: config
           mountPath: /etc/ntpd-rs
